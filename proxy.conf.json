@@ -1,0 +1,8 @@
+{
+  "/Temperature": {
+    "target": "https://ei40tccservice20251116142403.azurewebsites.net",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}
