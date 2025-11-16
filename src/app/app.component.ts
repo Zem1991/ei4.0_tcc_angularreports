@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChartConfiguration } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
+import { ViewChild } from '@angular/core';
 import { TemperatureService, Temperature } from './temperature.service';
-import Chart from 'chart.js/auto';
+// import Chart from 'chart.js/auto';s
 
 @Component({
   selector: 'app-root',
@@ -12,6 +13,8 @@ import Chart from 'chart.js/auto';
   templateUrl: './app.component.html',
 })
 export class AppComponent implements OnInit {
+  @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
+
   public lineChartData: ChartConfiguration<'line'>['data'] = {
     labels: [],
     datasets: [
@@ -24,6 +27,10 @@ export class AppComponent implements OnInit {
         backgroundColor: 'rgba(30,144,255,0.3)',
       },
     ],
+  };
+  public lineChartOptions: ChartConfiguration<'line'>['options'] = {
+    responsive: true,
+    maintainAspectRatio: true, // permite que o gráfico se ajuste ao container
   };
 
   constructor(private tempService: TemperatureService) {}
@@ -43,6 +50,12 @@ export class AppComponent implements OnInit {
         new Date(t.timestamp).toLocaleTimeString()
       );
       this.lineChartData.datasets[0].data = sorted.map((t) => t.value);
+
+      // muda a cor de fundo de cada ponto conforme o valor
+      this.lineChartData.datasets[0].backgroundColor = sorted.map((t) =>
+        t.value > 32 ? 'red' : 'blue'
+      );
+      this.chart?.update(); // força atualização do gráfico sem reload da página
     });
   }
 }
